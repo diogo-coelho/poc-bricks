@@ -1,10 +1,37 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
+  <nav><router-link to="/">Home</router-link> |</nav>
   <router-view />
 </template>
+
+<script lang="ts">
+import { defineComponent, onMounted, getCurrentInstance } from "vue";
+
+export default defineComponent({
+  setup() {
+    const app = getCurrentInstance();
+
+    function configureApplicationColorPalette() {
+      // Chama a função global que cria
+      const colorPaletteModel =
+        app?.appContext.config.globalProperties.$utils.colorPaletteGenerator(
+          "#18EF8D"
+        );
+
+      Object.entries(colorPaletteModel).forEach(([key, value]) => {
+        const number = key.replace(/\D/g, "");
+        document.documentElement.style.setProperty(
+          `--br-color-primary-${number}`,
+          value as string
+        );
+      });
+    }
+
+    onMounted(() => {
+      configureApplicationColorPalette();
+    });
+  },
+});
+</script>
 
 <style lang="scss">
 #app {
